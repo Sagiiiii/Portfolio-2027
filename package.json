@@ -1,0 +1,14 @@
+{
+  "name": "portfolio-2027",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && npm install --prefix client && npm install --prefix server",
+    "dev": "concurrently -n api,web -c magenta,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "seed": "npm run seed --prefix server",
+    "seed:force": "npm run seed:force --prefix server",
+    "set-password": "npm run set-password --prefix server --"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}

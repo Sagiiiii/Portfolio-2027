@@ -1,0 +1,77 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Paleta */
+  --color-canvas: #262626;
+  --color-surface: #1f1f1f;
+  --color-deep: #1a1a1a;
+  --color-line: #3a3a3a;
+  --color-ink: #f2f2f2;
+  --color-body: #cfcfcf;
+  --color-muted: #9b9b9b;
+  --color-mauve: #c4b6ba;
+  --color-mauve-dark: #a8989d;
+  --color-link: #4da3ff;
+
+  /* Escena del hero */
+  --color-night-1: #34365a;
+  --color-night-2: #23243c;
+  --color-lamp: #f5c26b;
+
+  --animate-blink: blink 1s step-end infinite;
+  --animate-twinkle: twinkle 3s ease-in-out infinite;
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-canvas font-mono text-body antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  ::selection {
+    @apply bg-mauve text-deep;
+  }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { @apply bg-deep; }
+  ::-webkit-scrollbar-thumb { @apply rounded-full bg-line; }
+}
+
+@utility container-x {
+  @apply mx-auto w-full max-w-6xl px-6 sm:px-10;
+}
+@utility eyebrow {
+  @apply font-mono text-base text-body sm:text-xl;
+}
+@utility title-xl {
+  @apply font-display text-5xl leading-none font-extrabold tracking-tight text-mauve uppercase sm:text-7xl;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-md px-8 py-4 font-mono text-base transition-colors duration-300 sm:text-lg;
+}
+@utility btn-primary {
+  @apply btn bg-mauve text-deep hover:bg-ink;
+}
+@utility btn-outline {
+  @apply btn border-2 border-body text-ink hover:border-ink hover:bg-ink hover:text-deep;
+}
+@utility chip {
+  @apply inline-flex items-center gap-2 rounded-md bg-surface px-3 py-2 font-mono text-sm text-body sm:text-base;
+}
+
+/* Utilidad para SplitText: evita saltos mientras se divide el texto */
+.split-ready {
+  font-kerning: none;
+}
