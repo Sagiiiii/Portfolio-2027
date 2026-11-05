@@ -73,6 +73,28 @@ npm run dev
   servicios, proyectos (con imagen), bloque "Déjame ayudarte", footer y lee los mensajes de contacto.
 - Las imágenes se comprimen en el navegador (WEBP, máx. 1600px) y se guardan en MongoDB (`/api/media/:id`).
 
+
+## Publicar en Vercel (web + API en el mismo dominio)
+
+El proyecto ya incluye `vercel.json` y la función `api/index.js`:
+
+- La web (`client/`) se compila y se sirve como sitio estático.
+- La API de Express (`server/`) corre como función de Vercel en `/api/*`.
+- Las rutas de React (`/about`, `/admin/...`) se redirigen a `index.html`.
+
+**Variables de entorno en Vercel** (Settings → Environment Variables), copiadas de `server/.env`:
+
+| Variable | Valor |
+|---|---|
+| `MONGODB_URI` | cadena de conexión de Atlas |
+| `MONGODB_DB` | `portfolio` |
+| `ADMIN_PASSWORD_HASH` | hash generado con `npm run set-password` |
+| `JWT_SECRET` | secreto de `server/.env` |
+| `VITE_ADMIN_PATH` | ruta secreta del panel (ej. `sagiii`) |
+
+En **MongoDB Atlas → Network Access** hay que permitir `0.0.0.0/0` (Vercel usa IPs dinámicas).
+Límite de Vercel: 4,5 MB por petición (los PDF se limitan a 4 MB).
+
 ## Hoja de ruta
 
 - [x] **Paso 1** — Plantilla visual estilo IDE con datos locales
@@ -82,4 +104,4 @@ npm run dev
 - [ ] **Paso 4b** — Panel: skills, experiencia y educación (página Sobre mí)
 - [x] **Paso 5** — Subida de imágenes (guardadas en MongoDB)
 - [ ] **Paso 6** — Aviso por email al recibir mensajes (ya se guardan en la BD)
-- [ ] **Paso 7** — Deploy (Vercel + Render + Atlas)
+- [ ] **Paso 7** — Deploy (Vercel + Atlas)
