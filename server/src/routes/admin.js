@@ -108,10 +108,11 @@ router.delete(
 // Cabecera opcional X-Filename: nombre original codificado con encodeURIComponent
 const IMAGES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'image/avif']
 const ALLOWED = [...IMAGES, 'application/pdf']
-const MAX = { image: 4 * 1024 * 1024, pdf: 10 * 1024 * 1024 }
+// Vercel acepta como máximo 4,5 MB por petición
+const MAX = { image: 4 * 1024 * 1024, pdf: 4 * 1024 * 1024 }
 router.post(
   '/media',
-  express.raw({ type: ALLOWED, limit: '10mb' }),
+  express.raw({ type: ALLOWED, limit: '4.5mb' }),
   handle(async (req, res) => {
     const type = req.headers['content-type']
     if (!ALLOWED.includes(type) || !Buffer.isBuffer(req.body) || !req.body.length) {
@@ -119,7 +120,7 @@ router.post(
     }
     const isPdf = type === 'application/pdf'
     if (req.body.length > (isPdf ? MAX.pdf : MAX.image)) {
-      return res.status(413).json({ error: `El archivo supera ${isPdf ? '10' : '4'} MB.` })
+      return res.status(413).json({ error: 'El archivo supera 4 MB.' })
     }
     // Comprueba que el PDF realmente lo sea (empieza por "%PDF")
     if (isPdf && req.body.subarray(0, 4).toString() !== '%PDF') {

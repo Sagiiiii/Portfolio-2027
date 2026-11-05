@@ -56,10 +56,10 @@ export async function uploadImage(file) {
   return url
 }
 
-// Sube el CV en PDF (máx. 10 MB) y devuelve su URL ("/api/media/<id>")
+// Sube el CV en PDF (máx. 4 MB) y devuelve su URL ("/api/media/<id>")
 export async function uploadPdf(file) {
   if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) throw new Error('El archivo debe ser un PDF')
-  if (file.size > 10 * 1024 * 1024) throw new Error('El PDF supera 10 MB')
+  if (file.size > 4 * 1024 * 1024) throw new Error('El PDF supera 4 MB. Comprímelo en ilovepdf.com o smallpdf.com')
   const { url } = await api('/admin/media', {
     method: 'POST',
     body: file,

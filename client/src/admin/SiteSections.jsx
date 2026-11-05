@@ -31,7 +31,7 @@ export function HeroSection({ site, set }) {
         <PdfInput
           value={profile.cv}
           onChange={(v) => set(['profile', 'cv'], v)}
-          hint="Máximo 10 MB. Se descarga como «CV-Tu-Nombre.pdf». También aparece en la página Sobre mí."
+          hint="Máximo 4 MB. Se descarga como «CV-Tu-Nombre.pdf». También aparece en la página Sobre mí."
         />
         <div className="grid items-end gap-5 md:grid-cols-[1fr_auto]">
           <Field

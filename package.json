@@ -1,6 +1,7 @@
 {
   "name": "portfolio-2027",
   "private": true,
+  "type": "module",
   "scripts": {
     "install:all": "npm install && npm install --prefix client && npm install --prefix server",
     "dev": "concurrently -n api,web -c magenta,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
