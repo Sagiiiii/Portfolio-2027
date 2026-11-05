@@ -8,6 +8,7 @@ import Preloader from './components/Preloader'
 import Cursor from './components/Cursor'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import WhatsAppWidget from './components/WhatsAppWidget'
 import Home from './pages/Home'
 import About from './pages/About'
 import Projects from './pages/Projects'
@@ -73,6 +74,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer key={`footer-${source}`} site={data.site} />
+      <WhatsAppWidget site={data.site} />
     </TransitionProvider>
   )
 }

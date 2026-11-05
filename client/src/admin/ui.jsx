@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { TbArrowUp, TbArrowDown, TbTrash, TbPlus, TbChevronDown, TbPhoto, TbUpload, TbX, TbSearch } from 'react-icons/tb'
-import { uploadImage } from './api'
+import { TbArrowUp, TbArrowDown, TbTrash, TbPlus, TbChevronDown, TbPhoto, TbUpload, TbX, TbSearch, TbFileTypePdf, TbExternalLink, TbBan } from 'react-icons/tb'
+import { uploadImage, uploadPdf } from './api'
 import { mediaUrl } from '../lib/links'
+import { socialIcons } from '../lib/icons'
+
+const BUTTON_ICONS = { none: { Icon: TbBan, label: 'Sin icono' }, ...socialIcons }
 
 export const inputCls =
   'w-full rounded-md border border-line bg-deep px-3 py-2.5 text-sm text-ink placeholder:text-muted/60 transition-colors focus:border-mauve focus:outline-none'
@@ -155,9 +158,16 @@ export function ButtonsEditor({ buttons, onChange }) {
       compact
       addLabel="Agregar botón"
       newItem={{ label: 'Nuevo botón', url: '/contact', variant: 'primary' }}
-      itemTitle={(b) => b.label || 'Botón sin texto'}
+      itemTitle={(b) => {
+        const Icon = b.icon ? socialIcons[b.icon]?.Icon : null
+        return (
+          <span className="flex items-center gap-2">
+            {Icon && <Icon />} {b.label || 'Botón sin texto'}
+          </span>
+        )
+      }}
       render={(b, update) => (
-        <div className="grid gap-3 md:grid-cols-[1fr_1.4fr_160px]">
+        <div className="grid gap-3 md:grid-cols-[1fr_1.4fr_140px_190px]">
           <Field label="Texto" value={b.label} onChange={(v) => update({ label: v })} />
           <Field
             label="Enlace"
@@ -173,6 +183,12 @@ export function ButtonsEditor({ buttons, onChange }) {
               { value: 'primary', label: 'Relleno' },
               { value: 'outline', label: 'Contorno' },
             ]}
+          />
+          <IconPicker
+            label="Icono"
+            value={b.icon || 'none'}
+            options={BUTTON_ICONS}
+            onChange={(v) => update({ icon: v === 'none' ? '' : v })}
           />
         </div>
       )}
@@ -292,6 +308,77 @@ export function ImageInput({ label, value, onChange, hint, contain, previewClass
         </div>
       </div>
       <input ref={fileRef} type="file" accept="image/*" hidden onChange={onFile} />
+    </div>
+  )
+}
+
+// ── Documento PDF (CV) ──────────────────────────────────────
+export function PdfInput({
+  label,
+  value,
+  onChange,
+  hint,
+  texts = { uploaded: 'CV subido', linked: 'CV enlazado (externo)', empty: 'Todavía no hay CV' },
+  placeholder = '…o pega un enlace (Google Drive, Dropbox…)',
+}) {
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const fileRef = useRef(null)
+  const uploaded = value?.startsWith('/api/media/')
+
+  const onFile = async (e) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setBusy(true)
+    setError('')
+    try {
+      onChange(await uploadPdf(file))
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div>
+      {label && <span className="mb-1.5 block text-xs font-medium tracking-wide text-body uppercase">{label}</span>}
+      <div className="flex flex-wrap items-center gap-4 rounded-lg border border-line bg-deep/50 p-4">
+        <TbFileTypePdf className={`shrink-0 text-4xl ${value ? 'text-[#ff6b6b]' : 'text-muted/40'}`} />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm text-ink">{value ? (uploaded ? texts.uploaded : texts.linked) : texts.empty}</p>
+          {value && (
+            <a href={mediaUrl(value)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-link hover:underline">
+              Ver documento actual <TbExternalLink />
+            </a>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => fileRef.current.click()}
+            className="flex items-center gap-2 rounded-md bg-mauve px-3 py-2 text-sm text-deep transition-colors hover:bg-ink disabled:opacity-60"
+          >
+            <TbUpload /> {busy ? 'Subiendo…' : value ? 'Reemplazar PDF' : 'Subir PDF'}
+          </button>
+          {value && (
+            <button type="button" onClick={() => onChange('')} className="flex items-center gap-1 rounded-md border border-line px-3 py-2 text-sm text-body hover:text-ink">
+              <TbX /> Quitar
+            </button>
+          )}
+        </div>
+      </div>
+      <input
+        value={value ?? ''}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className={`${inputCls} mt-2 text-xs`}
+      />
+      {hint && <span className="mt-1.5 block text-xs text-muted">{hint}</span>}
+      {error && <span className="mt-1.5 block text-xs text-[#ff7b7b]">✖ {error}</span>}
+      <input ref={fileRef} type="file" accept="application/pdf,.pdf" hidden onChange={onFile} />
     </div>
   )
 }

@@ -6,7 +6,9 @@ import {
   SiFlutter, SiDart, SiKotlin, SiSwift, SiGo, SiRust, SiDotnet, SiSharp, SiOpenjdk, SiSpring, SiDjango,
   SiFastapi, SiPostman, SiJest, SiRedux, SiThreedotjs, SiSocketdotio, SiNpm, SiAndroid, SiApple,
   SiGitlab, SiMariadb, SiSqlite, SiAstro, SiNuxt, SiExpo, SiElectron, SiGsap, SiFramer, SiCloudinary,
-  SiStripe, SiCplusplus, SiKubernetes, SiNginx, SiClaude,
+  SiStripe, SiCplusplus, SiKubernetes, SiNginx, SiClaude, SiFlask, SiGunicorn, SiChartdotjs, SiJinja,
+  SiPandas, SiNumpy, SiPlotly, SiScikitlearn, SiJupyter, SiTensorflow, SiPytorch, SiKaggle, SiAnaconda,
+  SiStreamlit,
 } from 'react-icons/si'
 import {
   FaGithub, FaGitlab, FaLinkedin, FaEnvelope, FaWhatsapp, FaFacebook, FaInstagram, FaXTwitter, FaYoutube,
@@ -17,6 +19,8 @@ import { VscCode } from 'react-icons/vsc'
 import {
   TbDeviceDesktopCode, TbCode, TbDeviceLaptop, TbDatabase, TbDeviceMobile, TbPalette, TbCloud,
   TbShieldLock, TbRocket, TbSeo, TbApi, TbBrush, TbChartBar, TbShoppingCart, TbSettings, TbBulb,
+  TbChartLine, TbChartDots, TbAward, TbFileCertificate, TbCpu, TbBuildingCommunity, TbRosetteDiscountCheck,
+  TbTool, TbBook, TbSchool, TbCertificate, TbBrain, TbWorld,
 } from 'react-icons/tb'
 
 // ── Tecnologías (clave guardada en la BD → icono, color y nombre) ──
@@ -94,6 +98,25 @@ export const techIcons = {
   stripe: { Icon: SiStripe, color: '#635BFF', label: 'Stripe' },
   cloudinary: { Icon: SiCloudinary, color: '#3448C5', label: 'Cloudinary' },
   claude: { Icon: SiClaude, color: '#D97757', label: 'Claude' },
+  visualbasic: { Icon: SiDotnet, color: '#945DB7', label: 'Visual Basic' },
+  chartjs: { Icon: SiChartdotjs, color: '#FF6384', label: 'Chart.js' },
+  jinja: { Icon: SiJinja, color: '#B41717', label: 'Jinja2' },
+  blade: { Icon: SiLaravel, color: '#F05340', label: 'Blade' },
+  flask: { Icon: SiFlask, color: '#ffffff', label: 'Flask' },
+  gunicorn: { Icon: SiGunicorn, color: '#499848', label: 'Gunicorn' },
+  xamarin: { Icon: SiDotnet, color: '#3498DB', label: 'Xamarin' },
+  pandas: { Icon: SiPandas, color: '#E70488', label: 'Pandas' },
+  numpy: { Icon: SiNumpy, color: '#4DABCF', label: 'NumPy' },
+  matplotlib: { Icon: TbChartLine, color: '#11557C', label: 'Matplotlib' },
+  seaborn: { Icon: TbChartDots, color: '#4C72B0', label: 'Seaborn' },
+  plotly: { Icon: SiPlotly, color: '#7A76FF', label: 'Plotly' },
+  scikitlearn: { Icon: SiScikitlearn, color: '#F7931E', label: 'Scikit-learn' },
+  jupyter: { Icon: SiJupyter, color: '#F37626', label: 'Jupyter Notebook' },
+  tensorflow: { Icon: SiTensorflow, color: '#FF6F00', label: 'TensorFlow' },
+  pytorch: { Icon: SiPytorch, color: '#EE4C2C', label: 'PyTorch' },
+  kaggle: { Icon: SiKaggle, color: '#20BEFF', label: 'Kaggle' },
+  anaconda: { Icon: SiAnaconda, color: '#44A833', label: 'Anaconda' },
+  streamlit: { Icon: SiStreamlit, color: '#FF4B4B', label: 'Streamlit' },
 }
 
 export const getTechIcon = (key) => techIcons[key] ?? { Icon: VscCode, color: '#c4b6ba', label: key }
@@ -150,3 +173,20 @@ export const serviceIcons = {
 }
 
 export const getServiceIcon = (key) => serviceIcons[key]?.Icon ?? TbDeviceDesktopCode
+
+// ── Iconos para "Formación académica" ──
+export const educationIcons = {
+  degree: { Icon: TbAward, label: 'Título / grado' },
+  certificate: { Icon: TbFileCertificate, label: 'Certificado' },
+  diploma: { Icon: TbCertificate, label: 'Diploma' },
+  tech: { Icon: TbCpu, label: 'Tecnología / IA' },
+  university: { Icon: TbBuildingCommunity, label: 'Universidad' },
+  badge: { Icon: TbRosetteDiscountCheck, label: 'Certificación oficial' },
+  technical: { Icon: TbTool, label: 'Técnico' },
+  school: { Icon: TbSchool, label: 'Colegio / escuela' },
+  book: { Icon: TbBook, label: 'Curso / estudios' },
+  data: { Icon: TbBrain, label: 'Ciencia de datos' },
+  international: { Icon: TbWorld, label: 'Internacional' },
+}
+
+export const getEducationIcon = (key) => educationIcons[key]?.Icon ?? TbSchool

@@ -30,6 +30,8 @@ export const portfolio = {
       tagline: 'Construyo aplicaciones web rápidas, accesibles y bien diseñadas.',
       role: 'Full Stack Developer',
       codeAction: 'ideas',
+      // Botón para descargar el CV (el archivo se sube desde el panel → profile.cv)
+      cvButton: { show: true, label: 'Descargar CV' },
       // icon: clave de la lista de tecnologías (react, nodejs...) | image: imagen subida (tiene prioridad)
       stack: [
         { name: 'React', icon: 'react', image: '' },
@@ -59,6 +61,11 @@ export const portfolio = {
       ],
     },
 
+    aboutPage: {
+      showCv: true, // botón "Descargar CV" (usa el mismo CV y texto que la portada)
+      buttons: [{ label: 'GitHub', url: 'https://github.com/', variant: 'outline', icon: 'github' }],
+    },
+
     services: {
       eyebrow: 'Lo que haré por ti',
       title: 'Servicios',
@@ -81,12 +88,96 @@ export const portfolio = {
       buttons: [{ label: 'Contactar ahora', url: '/contact', variant: 'primary' }],
     },
 
+    resumeTitles: {
+      skills: 'Stack tecnológico',
+      experience: 'Experiencia profesional',
+      education: 'Formación académica',
+      languages: 'Idiomas',
+      methodologies: 'Metodologías',
+      certifications: 'Certificaciones',
+      certificates: 'Mis certificados',
+    },
+    skills: [
+      {
+        category: 'Lenguajes',
+        items: [
+          { name: 'JavaScript', icon: 'javascript', image: '' },
+          { name: 'TypeScript', icon: 'typescript', image: '' },
+          { name: 'Python', icon: 'python', image: '' },
+        ],
+      },
+      {
+        category: 'Front-end',
+        items: [
+          { name: 'React', icon: 'react', image: '' },
+          { name: 'Tailwind CSS', icon: 'tailwind', image: '' },
+        ],
+      },
+      {
+        category: 'Back-end',
+        items: [
+          { name: 'Node.js', icon: 'nodejs', image: '' },
+          { name: 'Express.js', icon: 'express', image: '' },
+        ],
+      },
+      {
+        category: 'Bases de datos',
+        items: [
+          { name: 'MongoDB', icon: 'mongodb', image: '' },
+          { name: 'PostgreSQL', icon: 'postgresql', image: '' },
+        ],
+      },
+    ],
+    experience: [
+      {
+        role: 'Full Stack Developer',
+        company: 'Empresa Actual',
+        location: 'Ciudad, País',
+        mode: 'Remoto',
+        start: '2024-01',
+        end: '',
+        periodLabel: '',
+        description: 'Desarrollo de aplicaciones web con React y Node.js. Diseño de APIs REST y modelado de datos en MongoDB.',
+      },
+    ],
+    education: [
+      {
+        title: 'Ingeniería de Sistemas',
+        institution: 'Universidad',
+        location: 'Ciudad, País',
+        details: '',
+        start: '2018',
+        end: '2023',
+        periodLabel: '',
+        icon: 'university',
+      },
+    ],
+    languages: [
+      { name: 'Español', level: 'Nativo', percent: 100 },
+      { name: 'Inglés', level: 'Intermedio', percent: 55 },
+    ],
+    methodologies: ['Scrum', 'Remoto'],
+    certifications: [{ name: 'Certificación', issuer: 'Institución', date: '2024' }],
+    // Galería de certificados (imagen subida o URL, y enlace a PDF / Canva)
+    certificates: [],
+
+    whatsapp: {
+      enabled: true,
+      phone: '', // vacío = usa el teléfono del perfil
+      title: 'Escríbeme por WhatsApp',
+      status: 'Normalmente respondo en pocas horas',
+      greeting: '¡Hola! 👋 Gracias por visitar mi portafolio. ¿En qué puedo ayudarte?',
+      placeholder: 'Escribe tu mensaje…',
+      prefix: 'Hola, te escribo desde tu portafolio:',
+    },
+
     footer: {
       description: bio[0],
       linksTitle: 'Enlaces',
       contactTitle: 'Información de contacto',
       socialsTitle: 'Redes sociales',
       copyright: '© {year} - {name}',
+      install: { show: true, title: 'Lleva mi portafolio en tu celular', androidLabel: 'Android', iosLabel: 'iPhone' },
     },
   },
 
@@ -134,91 +225,6 @@ export const portfolio = {
       demo: '',
       featured: false,
       published: true,
-    },
-  ],
-
-  skills: [
-    {
-      category: 'frontend',
-      items: [
-        { name: 'React', icon: 'react' },
-        { name: 'JavaScript', icon: 'javascript' },
-        { name: 'TypeScript', icon: 'typescript' },
-        { name: 'Tailwind', icon: 'tailwind' },
-        { name: 'Next.js', icon: 'nextjs' },
-        { name: 'HTML', icon: 'html' },
-        { name: 'CSS', icon: 'css' },
-      ],
-    },
-    {
-      category: 'backend',
-      items: [
-        { name: 'Node.js', icon: 'nodejs' },
-        { name: 'Express', icon: 'express' },
-        { name: 'Python', icon: 'python' },
-      ],
-    },
-    {
-      category: 'database',
-      items: [
-        { name: 'MongoDB', icon: 'mongodb' },
-        { name: 'PostgreSQL', icon: 'postgresql' },
-      ],
-    },
-    {
-      category: 'tools',
-      items: [
-        { name: 'Git', icon: 'git' },
-        { name: 'GitHub', icon: 'github' },
-        { name: 'Docker', icon: 'docker' },
-        { name: 'Vite', icon: 'vite' },
-        { name: 'Figma', icon: 'figma' },
-      ],
-    },
-  ],
-
-  experience: [
-    {
-      role: 'Full Stack Developer',
-      company: 'Empresa Actual',
-      location: 'Remoto',
-      start: '2024-01',
-      end: null,
-      description: [
-        'Desarrollo de aplicaciones web con React y Node.js.',
-        'Diseño de APIs REST y modelado de datos en MongoDB.',
-        'Mejora del rendimiento y la accesibilidad del frontend.',
-      ],
-      tech: ['React', 'Node.js', 'MongoDB', 'Tailwind'],
-    },
-    {
-      role: 'Frontend Developer',
-      company: 'Empresa Anterior',
-      location: 'Ciudad, País',
-      start: '2022-03',
-      end: '2023-12',
-      description: [
-        'Maquetación de interfaces responsive a partir de diseños en Figma.',
-        'Integración con APIs y manejo de estado en React.',
-      ],
-      tech: ['React', 'JavaScript', 'CSS'],
-    },
-  ],
-
-  education: [
-    {
-      title: 'Ingeniería de Sistemas',
-      institution: 'Universidad',
-      start: '2018',
-      end: '2023',
-      description: 'Formación en desarrollo de software, bases de datos y redes.',
-    },
-    {
-      title: 'Bootcamp Full Stack',
-      institution: 'Academia Online',
-      start: '2021',
-      end: '2021',
-      description: 'Programa intensivo de React, Node.js y MongoDB.',
     },
   ],
 }

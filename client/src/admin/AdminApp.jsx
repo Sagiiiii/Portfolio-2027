@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
+import { FaWhatsapp } from 'react-icons/fa6'
 import {
   TbUser, TbShare, TbId, TbTools, TbFolders, TbSpeakerphone, TbLayoutBottombar, TbMail,
-  TbExternalLink, TbLogout, TbLock, TbDeviceFloppy, TbMenu2, TbX,
+  TbExternalLink, TbLogout, TbLock, TbDeviceFloppy, TbMenu2, TbX, TbStack2, TbBriefcase, TbSchool, TbCertificate, TbAward,
 } from 'react-icons/tb'
 import { api, getToken, setToken, setIn } from './api'
-import { HeroSection, SocialsSection, AboutSection, ServicesSection, CtaSection, FooterSection } from './SiteSections'
+import { HeroSection, SocialsSection, AboutSection, ServicesSection, CtaSection, FooterSection, WhatsAppSection } from './SiteSections'
 import ProjectsManager from './ProjectsManager'
+import { SkillsSection, ExperienceSection, EducationSection, ExtrasSection, CertificatesSection } from './ResumeSections'
 import { Card, Field, Toast } from './ui'
 
 // Ruta secreta del panel: /admin/<ADMIN_PATH>  (cámbiala en client/.env → VITE_ADMIN_PATH)
@@ -16,10 +18,16 @@ const TABS = [
   { id: 'hero', label: 'Perfil y portada', Icon: TbUser, Comp: HeroSection },
   { id: 'socials', label: 'Redes sociales', Icon: TbShare, Comp: SocialsSection },
   { id: 'about', label: 'Sobre mí', Icon: TbId, Comp: AboutSection },
+  { id: 'skills', label: 'Stack tecnológico', Icon: TbStack2, Comp: SkillsSection },
+  { id: 'experience', label: 'Experiencia', Icon: TbBriefcase, Comp: ExperienceSection },
+  { id: 'education', label: 'Formación', Icon: TbSchool, Comp: EducationSection },
+  { id: 'extras', label: 'Idiomas y certificaciones', Icon: TbCertificate, Comp: ExtrasSection },
+  { id: 'certificates', label: 'Mis certificados', Icon: TbAward, Comp: CertificatesSection },
   { id: 'services', label: 'Servicios', Icon: TbTools, Comp: ServicesSection },
   { id: 'projects', label: 'Proyectos', Icon: TbFolders, Comp: ProjectsManager },
   { id: 'cta', label: 'Déjame ayudarte', Icon: TbSpeakerphone, Comp: CtaSection },
   { id: 'footer', label: 'Footer', Icon: TbLayoutBottombar, Comp: FooterSection },
+  { id: 'whatsapp', label: 'WhatsApp', Icon: FaWhatsapp, Comp: WhatsAppSection },
   { id: 'messages', label: 'Mensajes', Icon: TbMail, Comp: Messages },
 ]
 

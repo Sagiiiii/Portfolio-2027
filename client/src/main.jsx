@@ -3,7 +3,11 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router'
 import { PortfolioProvider } from './hooks/usePortfolio'
 import App from './App.jsx'
+import { initInstall } from './lib/install'
 import './index.css'
+
+// Captura el evento de instalación (Android) y registra el service worker
+initInstall()
 
 // El panel se descarga solo cuando se visita (no pesa en la web pública)
 const AdminApp = lazy(() => import('./admin/AdminApp.jsx'))

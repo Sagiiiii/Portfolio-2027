@@ -6,8 +6,8 @@ export const getToken = () => localStorage.getItem(KEY)
 export const setToken = (t) => (t ? localStorage.setItem(KEY, t) : localStorage.removeItem(KEY))
 
 // Llamada a la API con el token del admin
-export async function api(path, { method = 'GET', body, contentType } = {}) {
-  const headers = {}
+export async function api(path, { method = 'GET', body, contentType, headers: extra } = {}) {
+  const headers = { ...extra }
   const token = getToken()
   if (token) headers.Authorization = `Bearer ${token}`
   const isRaw = body instanceof Blob
@@ -53,6 +53,19 @@ export async function uploadImage(file) {
   const blob = await compressImage(file)
   if (blob.size > 4 * 1024 * 1024) throw new Error('La imagen supera 4 MB incluso comprimida')
   const { url } = await api('/admin/media', { method: 'POST', body: blob, contentType: blob.type || file.type })
+  return url
+}
+
+// Sube el CV en PDF (máx. 10 MB) y devuelve su URL ("/api/media/<id>")
+export async function uploadPdf(file) {
+  if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) throw new Error('El archivo debe ser un PDF')
+  if (file.size > 10 * 1024 * 1024) throw new Error('El PDF supera 10 MB')
+  const { url } = await api('/admin/media', {
+    method: 'POST',
+    body: file,
+    contentType: 'application/pdf',
+    headers: { 'X-Filename': encodeURIComponent(file.name) },
+  })
   return url
 }
 

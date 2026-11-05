@@ -3,6 +3,7 @@ import { TbArrowDown } from 'react-icons/tb'
 import { gsap, SplitText, useGSAP } from '../../lib/gsap'
 import { getSocialIcon } from '../../lib/icons'
 import ActionButtons from '../ActionButtons'
+import CvButton from '../CvButton'
 import HeroScene from './HeroScene'
 
 export default function Hero({ site, play }) {
@@ -104,7 +105,9 @@ export default function Hero({ site, play }) {
 
           <div className="hero-copy relative flex flex-col items-center gap-6 px-6 pt-6 pb-8 sm:absolute sm:inset-x-0 sm:bottom-0 sm:bg-linear-to-t sm:from-[#15162a] sm:via-[#15162a]/80 sm:to-transparent sm:pt-16 sm:pb-12">
             <p className="max-w-xl text-sm leading-relaxed text-ink/90 sm:text-lg">{hero.tagline}</p>
-            <ActionButtons buttons={hero.buttons} className="justify-center" />
+            <ActionButtons buttons={hero.buttons} className="justify-center">
+              <CvButton profile={profile} config={hero.cvButton} />
+            </ActionButtons>
           </div>
         </div>
       </div>
@@ -124,7 +127,7 @@ export default function Hero({ site, play }) {
       </div>
 
       {/* Indicador de scroll */}
-      <div className="hero-side absolute right-10 bottom-16 hidden flex-col items-center gap-3 xl:flex">
+      <div className="hero-side absolute right-10 bottom-36 hidden flex-col items-center gap-3 xl:flex">
         <span className="font-mono text-xs tracking-[0.4em] text-body uppercase [writing-mode:vertical-rl]">Scroll</span>
         <TbArrowDown className="animate-bounce text-xl text-body" />
       </div>

@@ -1,6 +1,8 @@
 import { techIcons, socialIcons, serviceIcons, getTechIcon } from '../lib/icons'
 import { mediaUrl } from '../lib/links'
-import { Card, Grid, Field, Toggle, ListEditor, ButtonsEditor, IconPicker, ImageInput, LINK_HINT } from './ui'
+import { portfolio } from '../data/portfolio'
+import { getAboutPage } from '../lib/aboutPage'
+import { Card, Grid, Field, Toggle, ListEditor, ButtonsEditor, IconPicker, ImageInput, PdfInput, LINK_HINT } from './ui'
 
 // Cada sección recibe: site (datos actuales) y set(path, value) para modificarlos
 
@@ -16,7 +18,6 @@ export function HeroSection({ site, set }) {
           <Field label="Email" type="email" value={profile.email} onChange={(v) => set(['profile', 'email'], v)} />
           <Field label="Teléfono" value={profile.phone} onChange={(v) => set(['profile', 'phone'], v)} placeholder="+51 999 999 999" />
           <Field label="Ubicación" value={profile.location} onChange={(v) => set(['profile', 'location'], v)} />
-          <Field label="Enlace al CV (PDF)" value={profile.cv} onChange={(v) => set(['profile', 'cv'], v)} placeholder="https://drive.google.com/..." />
         </Grid>
         <Toggle
           label="Disponible para trabajar"
@@ -24,6 +25,26 @@ export function HeroSection({ site, set }) {
           checked={profile.available}
           onChange={(v) => set(['profile', 'available'], v)}
         />
+      </Card>
+
+      <Card title="Currículum (CV)" description="Sube tu CV en PDF. Cada vez que lo reemplaces, la web descargará la versión nueva.">
+        <PdfInput
+          value={profile.cv}
+          onChange={(v) => set(['profile', 'cv'], v)}
+          hint="Máximo 10 MB. Se descarga como «CV-Tu-Nombre.pdf». También aparece en la página Sobre mí."
+        />
+        <div className="grid items-end gap-5 md:grid-cols-[1fr_auto]">
+          <Field
+            label="Texto del botón"
+            value={hero.cvButton?.label ?? 'Descargar CV'}
+            onChange={(v) => set(['hero', 'cvButton', 'label'], v)}
+          />
+          <Toggle
+            label="Mostrar botón en la portada"
+            checked={hero.cvButton?.show ?? true}
+            onChange={(v) => set(['hero', 'cvButton', 'show'], v)}
+          />
+        </div>
       </Card>
 
       <Card title="Portada (hero)" description="Lo primero que se ve al entrar en la web.">
@@ -149,6 +170,7 @@ export function SocialsSection({ site, set }) {
 // ── Sobre mí ────────────────────────────────────────────────
 export function AboutSection({ site, set }) {
   const { about, profile } = site
+  const aboutPage = getAboutPage(site)
   return (
     <>
       <Card title="Sección «Sobre mí» (inicio)">
@@ -171,8 +193,14 @@ export function AboutSection({ site, set }) {
         </div>
       </Card>
 
-      <Card title="Página «Sobre mí»" description="Textos de la página /about.">
-        <Field label="Titular" value={profile.headline} onChange={(v) => set(['profile', 'headline'], v)} placeholder="Un desarrollador de Software" />
+      <Card title="Página «Sobre mí»" description="Textos y botones de la página /about.">
+        <Field
+          label="Titular"
+          value={profile.headline}
+          onChange={(v) => set(['profile', 'headline'], v)}
+          placeholder="Un desarrollador de Software"
+          hint="Cuanto más largo, más pequeña se muestra la letra. Consejo: escríbelo en mayúsculas y minúsculas, no todo en mayúsculas."
+        />
         <div>
           <span className="mb-2 block text-xs font-medium tracking-wide text-body uppercase">Párrafos de presentación</span>
           <ListEditor
@@ -184,6 +212,17 @@ export function AboutSection({ site, set }) {
             itemTitle={(_, i) => `Párrafo ${i + 1}`}
             render={(p, update) => <Field textarea rows={3} value={p} onChange={update} />}
           />
+        </div>
+        <div className="space-y-4 border-t border-line pt-5">
+          <span className="block text-xs font-medium tracking-wide text-body uppercase">Botones debajo de la presentación</span>
+          <Toggle
+            label="Mostrar «Descargar CV»"
+            hint="Usa el mismo PDF y texto que configuraste en Perfil y portada → Currículum (CV)."
+            checked={aboutPage.showCv}
+            onChange={(v) => set(['aboutPage'], { ...aboutPage, showCv: v })}
+          />
+          <ButtonsEditor buttons={aboutPage.buttons} onChange={(v) => set(['aboutPage'], { ...aboutPage, buttons: v })} />
+          <p className="text-xs text-muted">{LINK_HINT}</p>
         </div>
       </Card>
     </>
@@ -261,6 +300,83 @@ export function FooterSection({ site, set }) {
         onChange={(v) => set(['footer', 'copyright'], v)}
         hint="{year} se reemplaza por el año actual y {name} por tu nombre."
       />
+      <InstallFields footer={footer} set={set} />
     </Card>
+  )
+}
+
+// ── WhatsApp ────────────────────────────────────────────────
+export function WhatsAppSection({ site, set }) {
+  const wa = { ...portfolio.site.whatsapp, ...site.whatsapp }
+  const setWa = (key) => (v) => set(['whatsapp'], { ...wa, [key]: v })
+  const number = (wa.phone || site.profile.phone || '').replace(/\D/g, '')
+  const testText = [wa.prefix, 'Mensaje de prueba'].filter(Boolean).join('\n\n')
+
+  return (
+    <Card
+      title="Botón flotante de WhatsApp"
+      description="Aparece en todas las páginas de la web. El visitante escribe su mensaje y se abre WhatsApp con tu número y el texto ya escrito."
+      aside={
+        number.length >= 8 && (
+          <a
+            href={`https://wa.me/${number}?text=${encodeURIComponent(testText)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-md bg-[#25d366] px-4 py-2 text-sm font-medium text-[#0b141a] hover:opacity-90"
+          >
+            Probar enlace
+          </a>
+        )
+      }
+    >
+      <Toggle label="Mostrar el botón de WhatsApp" checked={wa.enabled} onChange={setWa('enabled')} />
+      <Field
+        label="Número de WhatsApp (con código de país)"
+        value={wa.phone}
+        onChange={setWa('phone')}
+        placeholder={site.profile.phone || '+51 999 999 999'}
+        hint={
+          number.length >= 8
+            ? `Se usará: +${number}${wa.phone ? '' : ' (el teléfono del Perfil, porque este campo está vacío)'}`
+            : '⚠ Falta el número: escríbelo aquí o en Perfil → Teléfono. Sin número el botón no se muestra.'
+        }
+      />
+      <Grid>
+        <Field label="Título de la ventana" value={wa.title} onChange={setWa('title')} />
+        <Field label="Estado (debajo del título)" value={wa.status} onChange={setWa('status')} />
+      </Grid>
+      <Field label="Mensaje de bienvenida (burbuja)" textarea rows={3} value={wa.greeting} onChange={setWa('greeting')} />
+      <Grid>
+        <Field label="Texto de ayuda del campo" value={wa.placeholder} onChange={setWa('placeholder')} />
+        <Field
+          label="Inicio automático del mensaje"
+          value={wa.prefix}
+          onChange={setWa('prefix')}
+          hint="Se añade antes del texto del visitante. Así sabrás que te escriben desde la web."
+        />
+      </Grid>
+    </Card>
+  )
+}
+
+// Botones "Descargar en Android / iPhone" del footer
+function InstallFields({ footer, set }) {
+  const install = { ...portfolio.site.footer.install, ...footer.install }
+  const setI = (k) => (v) => set(['footer', 'install'], { ...install, [k]: v })
+  return (
+    <div className="space-y-4 border-t border-line pt-5">
+      <span className="block text-xs font-medium tracking-wide text-body uppercase">Botones para instalar la web como app</span>
+      <Toggle
+        label="Mostrar «Descargar en Android / iPhone»"
+        hint="En Android se instala con un clic. En iPhone se muestra una guía de 2 pasos (Apple no permite instalar desde un botón)."
+        checked={install.show}
+        onChange={setI('show')}
+      />
+      <Grid cols={3}>
+        <Field label="Texto encima de los botones" value={install.title} onChange={setI('title')} />
+        <Field label="Botón Android" value={install.androidLabel} onChange={setI('androidLabel')} />
+        <Field label="Botón iPhone" value={install.iosLabel} onChange={setI('iosLabel')} />
+      </Grid>
+    </div>
   )
 }

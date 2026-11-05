@@ -28,6 +28,7 @@ const buttonSchema = new Schema(
     label: text(60),
     url: link,
     variant: { type: String, enum: ['primary', 'outline'], default: 'primary' },
+    icon: text(40), // opcional: clave de red social (github, linkedin...) para mostrar su logo
   },
   { _id: false },
 )
@@ -51,6 +52,11 @@ const siteSchema = new Schema(
       tagline: text(300),
       role: text(80),
       codeAction: text(40),
+      // Botón "Descargar CV" en la portada (usa profile.cv)
+      cvButton: {
+        show: { type: Boolean, default: true },
+        label: { ...text(40), default: 'Descargar CV' },
+      },
       stack: [new Schema({ name: text(40), icon: text(40), image }, { _id: false })],
       buttons: [buttonSchema],
     },
@@ -60,6 +66,11 @@ const siteSchema = new Schema(
       title: text(80),
       text: text(3000),
       image,
+      buttons: [buttonSchema],
+    },
+    // Botones de la página /about (debajo de la presentación)
+    aboutPage: {
+      showCv: { type: Boolean, default: true },
       buttons: [buttonSchema],
     },
     services: {
@@ -77,12 +88,90 @@ const siteSchema = new Schema(
       title: text(120),
       buttons: [buttonSchema],
     },
+    // ── Trayectoria (página Sobre mí) ──
+    resumeTitles: {
+      skills: { ...text(60), default: 'Stack tecnológico' },
+      experience: { ...text(60), default: 'Experiencia profesional' },
+      education: { ...text(60), default: 'Formación académica' },
+      languages: { ...text(60), default: 'Idiomas' },
+      methodologies: { ...text(60), default: 'Metodologías' },
+      certifications: { ...text(60), default: 'Certificaciones' },
+      certificates: { ...text(60), default: 'Mis certificados' },
+    },
+    skills: [
+      new Schema(
+        {
+          category: text(60),
+          items: [new Schema({ name: text(40), icon: text(40), image }, { _id: false })],
+        },
+        { _id: false },
+      ),
+    ],
+    experience: [
+      new Schema(
+        {
+          role: text(100),
+          company: text(100),
+          location: text(80),
+          mode: { type: String, enum: ['', 'Presencial', 'Remoto', 'Híbrido'], default: '' },
+          start: text(7), // 'YYYY-MM'
+          end: text(7), // vacío = actualidad
+          periodLabel: text(40), // opcional: reemplaza las fechas (ej: "Ago & Nov 2024")
+          description: text(1500),
+        },
+        { _id: false },
+      ),
+    ],
+    education: [
+      new Schema(
+        {
+          title: text(120),
+          institution: text(120),
+          location: text(80),
+          details: text(300),
+          start: text(7),
+          end: text(7),
+          periodLabel: text(40),
+          icon: text(40),
+        },
+        { _id: false },
+      ),
+    ],
+    languages: [
+      new Schema(
+        { name: text(40), level: text(60), percent: { type: Number, min: 0, max: 100, default: 50 } },
+        { _id: false },
+      ),
+    ],
+    methodologies: [text(40)],
+    certifications: [new Schema({ name: text(120), issuer: text(120), date: text(30) }, { _id: false })],
+    // Galería "Mis certificados": imagen (subida o URL) y/o enlace (PDF subido, Canva, Credly…)
+    certificates: [
+      new Schema({ title: text(120), issuer: text(120), date: text(30), image, url: link }, { _id: false }),
+    ],
+
+    whatsapp: {
+      enabled: { type: Boolean, default: true },
+      phone: text(30), // vacío = usa profile.phone
+      title: { ...text(60), default: 'Escríbeme por WhatsApp' },
+      status: { ...text(80), default: 'Normalmente respondo en pocas horas' },
+      greeting: { ...text(400), default: '¡Hola! 👋 Gracias por visitar mi portafolio. ¿En qué puedo ayudarte?' },
+      placeholder: { ...text(80), default: 'Escribe tu mensaje…' },
+      prefix: { ...text(200), default: 'Hola, te escribo desde tu portafolio:' },
+    },
     footer: {
       description: text(600),
       linksTitle: text(60),
       contactTitle: text(60),
       socialsTitle: text(60),
       copyright: text(120),
+      // Botones "Descargar en Android / iPhone" (instalan la web como app)
+      install: {
+        show: { type: Boolean, default: true },
+        title: { ...text(80), default: 'Lleva mi portafolio en tu celular' },
+        androidLabel: { ...text(30), default: 'Android' },
+        iosLabel: { ...text(30), default: 'iPhone' },
+      },
     },
   },
   opts,
@@ -159,6 +248,7 @@ const mediaSchema = new Schema(
   {
     data: { type: Buffer, required: true },
     contentType: { type: String, required: true },
+    filename: { type: String, default: '' }, // nombre original (para descargas, ej: CV.pdf)
     size: Number,
   },
   { timestamps: true },

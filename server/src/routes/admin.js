@@ -103,18 +103,33 @@ router.delete(
   }),
 )
 
-// ── Imágenes ────────────────────────────────────────────────
-// POST /api/admin/media  (cuerpo = bytes de la imagen, Content-Type: image/...)
-const ALLOWED = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'image/avif']
+// ── Archivos (imágenes y CV en PDF) ─────────────────────────
+// POST /api/admin/media  (cuerpo = bytes del archivo, Content-Type: image/... o application/pdf)
+// Cabecera opcional X-Filename: nombre original codificado con encodeURIComponent
+const IMAGES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'image/avif']
+const ALLOWED = [...IMAGES, 'application/pdf']
+const MAX = { image: 4 * 1024 * 1024, pdf: 10 * 1024 * 1024 }
 router.post(
   '/media',
-  express.raw({ type: ALLOWED, limit: '4mb' }),
+  express.raw({ type: ALLOWED, limit: '10mb' }),
   handle(async (req, res) => {
     const type = req.headers['content-type']
     if (!ALLOWED.includes(type) || !Buffer.isBuffer(req.body) || !req.body.length) {
-      return res.status(400).json({ error: 'Formato no permitido. Usa JPG, PNG, WEBP, GIF, AVIF o SVG.' })
+      return res.status(400).json({ error: 'Formato no permitido. Usa JPG, PNG, WEBP, GIF, AVIF, SVG o PDF.' })
     }
-    const media = await Media.create({ data: req.body, contentType: type, size: req.body.length })
+    const isPdf = type === 'application/pdf'
+    if (req.body.length > (isPdf ? MAX.pdf : MAX.image)) {
+      return res.status(413).json({ error: `El archivo supera ${isPdf ? '10' : '4'} MB.` })
+    }
+    // Comprueba que el PDF realmente lo sea (empieza por "%PDF")
+    if (isPdf && req.body.subarray(0, 4).toString() !== '%PDF') {
+      return res.status(400).json({ error: 'El archivo no es un PDF válido.' })
+    }
+    let filename = ''
+    try {
+      filename = decodeURIComponent(req.headers['x-filename'] || '').replace(/[^\w.\- ()áéíóúñÁÉÍÓÚÑ]/g, '').slice(0, 120)
+    } catch {}
+    const media = await Media.create({ data: req.body, contentType: type, filename, size: req.body.length })
     res.status(201).json({ url: `/api/media/${media._id}` })
   }),
 )

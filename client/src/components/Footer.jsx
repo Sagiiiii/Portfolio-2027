@@ -3,10 +3,13 @@ import { TLink } from './PageTransition'
 import { NAV } from './Navbar'
 import { gsap, useGSAP } from '../lib/gsap'
 import { fillTemplate, isExternal } from '../lib/links'
+import { portfolio } from '../data/portfolio'
+import InstallButtons from './InstallButtons'
 
 export default function Footer({ site }) {
   const ref = useRef(null)
   const { profile, footer, socials } = site
+  const install = { ...portfolio.site.footer.install, ...footer.install }
 
   useGSAP(
     () => {
@@ -64,6 +67,11 @@ export default function Footer({ site }) {
             )}
             {profile.location && <li className="text-muted">{profile.location}</li>}
           </ul>
+          {install.show && (
+            <div className="mt-8">
+              <InstallButtons title={install.title} androidLabel={install.androidLabel} iosLabel={install.iosLabel} />
+            </div>
+          )}
         </div>
 
         <div className="ft-col">

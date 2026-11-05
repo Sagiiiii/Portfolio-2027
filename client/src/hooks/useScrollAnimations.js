@@ -109,6 +109,16 @@ export function useScrollAnimations(scope, deps = []) {
           )
         })
 
+        // Barras de progreso (idiomas): se llenan al aparecer
+        q('[data-anim="bar"]').forEach((el) => {
+          gsap.from(el, {
+            scaleX: 0,
+            duration: 1.4,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+          })
+        })
+
         q('[data-anim="parallax"]').forEach((el) => {
           const speed = Number(el.dataset.speed || 0.2)
           gsap.to(el, {

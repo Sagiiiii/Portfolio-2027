@@ -31,7 +31,7 @@ export function createApp() {
 
   // eslint-disable-next-line no-unused-vars
   app.use((err, _req, res, _next) => {
-    if (err.type === 'entity.too.large') return res.status(413).json({ error: 'El archivo es demasiado grande (máx. 4 MB).' })
+    if (err.type === 'entity.too.large') return res.status(413).json({ error: 'El archivo es demasiado grande (máx. 4 MB para imágenes y 10 MB para PDF).' })
     console.error(err)
     res.status(err.status || 500).json({ error: 'Error interno del servidor' })
   })
